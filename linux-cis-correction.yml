@@ -1,1 +1,55 @@
+---
+- name: Correction de base + CIS Linux
+  hosts: linux
+  become: yes
+  tasks:
+
+    - name: Mettre à jour les paquets
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Autoriser SSH dans le pare-feu
+      ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: Activer UFW
+      ufw:
+        state: enabled
+
+    # CIS 1.1.1 - Configurer la politique de mot de passe (exemple)
+    - name: S'assurer que le paramètre PASS_MAX_DAYS est à 90 ou moins
+      lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MAX_DAYS'
+        line: 'PASS_MAX_DAYS   90'
+
+    # CIS 1.1.3 - Configurer le délai d'expiration du mot de passe minimum
+    - name: S'assurer que le paramètre PASS_MIN_DAYS est à 7 ou plus
+      lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MIN_DAYS'
+        line: 'PASS_MIN_DAYS   7'
+
+    # CIS 1.1.4 - Configurer le verrouillage des comptes inactifs
+    - name: Configurer le verrouillage des comptes inactifs à 30 jours
+      lineinfile:
+        path: /etc/default/useradd
+        regexp: '^INACTIVE='
+        line: 'INACTIVE=30'
+
+    # CIS 1.3.1 - S'assurer que le système utilise SHA-512 pour les mots de passe
+    - name: Configurer sha512 pour le cryptage des mots de passe
+      replace:
+        path: /etc/pam.d/common-password
+        regexp: '^(password\s+requisite\s+pam_unix.so).*'
+        replace: '\1 sha512'
+
+    # CIS 2.3.2 - Désactiver le service avahi-daemon
+    - name: Désactiver avahi-daemon
+      systemd:
+        name: avahi-daemon
+        enabled: no
+        state: stopped
 
