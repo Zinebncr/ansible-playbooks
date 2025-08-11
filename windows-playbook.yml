@@ -6,9 +6,8 @@
     - ansible.windows
 
   tasks:
-    - name: Activer la journalisation des événements de sécurité (audit des connexions réussies)
+    - name: Activer la journalisation des événements de sécurité (audit de la sous-catégorie Logon)
       ansible.windows.win_audit_policy_system:
-        category: Logon/Logoff
         subcategory: Logon
         audit_type: Success,Failure
 
@@ -24,6 +23,5 @@
         name: InactivityTimeoutSecs
         datatype: dword
         data: 900
-
     
 
