@@ -1,1 +1,45 @@
+---
+- name: Appliquer des recommandations CIS Windows basiques (safe)
+  hosts: windows
+  gather_facts: no
+  tasks:
+
+    - name: Activer la journalisation des événements de sécurité (Audit Logon)
+      win_audit_policy:
+        category: Logon/Logoff
+        subcategory: Logon
+        success: enable
+        failure: enable
+
+    - name: Configurer le délai d’expiration du mot de passe à 60 jours
+      win_password_policy:
+        max_password_age: 60
+
+    - name: Activer la protection contre les virus Windows Defender
+      win_defender:
+        real_time_protection_enabled: yes
+
+    - name: Activer la mise à jour automatique
+      win_regedit:
+        path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update
+        name: AUOptions
+        data: 4
+        datatype: dword
+
+    - name: Désactiver les comptes invités (Guest)
+      win_user:
+        name: Guest
+        state: disabled
+
+    - name: Configurer la politique de verrouillage du compte à 5 tentatives échouées
+      win_account_lockout_policy:
+        lockout_threshold: 5
+        lockout_duration: 15
+        lockout_window: 15
+
+    - name: Désactiver le partage de fichiers SMBv1 (insecure)
+      win_feature:
+        name: FS-SMB1
+        state: absent
+
 
