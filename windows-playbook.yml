@@ -27,13 +27,13 @@
 
     - name: Assurer que le pare-feu Windows est activé (profil Domaine)
       win_firewall_profile:
-        name: Domain
-        enabled: yes
+        profile: Domain
+        state: enabled
 
     - name: Assurer que le pare-feu Windows est activé (profil Privé)
       win_firewall_profile:
-        name: Private
-        enabled: yes
+        profile: Private
+        state: enabled
 
     - name: Assurer que le pare-feu Windows est activé (profil Public)
       win_firewall_profile:
