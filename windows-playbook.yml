@@ -7,35 +7,31 @@
 
   tasks:
     - name: Activer la journalisation des événements de sécurité (audit des connexions réussies)
-      win_audit_policy_system:
+      ansible.windows.win_audit_policy_system:
         category: Logon/Logoff
         subcategory: Logon
         audit_type: Success,Failure
 
     - name: Désactiver le partage SMBv1 (CIS recommande de le désactiver)
-      win_feature:
+      ansible.windows.win_feature:
         name: FS-SMB1
         state: absent
         restart: no
 
     - name: Configurer le délai d’expiration du verrouillage de session à 15 minutes
-      win_regedit:
+      ansible.windows.win_regedit:
         path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
         name: InactivityTimeoutSecs
         datatype: dword
-        data: 900  # 15 minutes en secondes
+        data: 900
 
     - name: Assurer que le pare-feu Windows est activé (profil Domaine)
-      win_firewall_profile:
+      ansible.windows.win_firewall_profile:
         profile: Domain
         state: enabled
 
     - name: Assurer que le pare-feu Windows est activé (profil Privé)
-      win_firewall_profile:
+      ansible.windows.win_firewall_profile:
         profile: Private
         state: enabled
 
-    - name: Assurer que le pare-feu Windows est activé (profil Public)
-      win_firewall_profile:
-        name: Public
-        enabled: yes
