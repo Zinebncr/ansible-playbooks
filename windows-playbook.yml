@@ -25,13 +25,5 @@
         datatype: dword
         data: 900
 
-    - name: Assurer que le pare-feu Windows est activé (profil Domaine)
-      ansible.windows.win_firewall_profile:
-        profile: Domain
-        state: enabled
-
-    - name: Assurer que le pare-feu Windows est activé (profil Privé)
-      ansible.windows.win_firewall_profile:
-        profile: Private
-        state: enabled
+    
 
