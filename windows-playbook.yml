@@ -1,6 +1,7 @@
 ---
 - name: Correction CIS basique Windows
   hosts: windows
+  ansible-galaxy collection install -r collections/requirements.yml
   gather_facts: no
   collections:
     - ansible.windows
