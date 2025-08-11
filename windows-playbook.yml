@@ -1,10 +1,42 @@
 ---
-- name: Test connexion Windows simple
+- name: Correction CIS basique Windows
   hosts: windows
   gather_facts: no
   collections:
     - ansible.windows
 
   tasks:
-    - name: Ping Windows via win_ping
-      win_ping:
+    - name: Activer la journalisation des événements de sécurité (audit des connexions réussies)
+      win_audit_policy:
+        category: Logon/Logoff
+        subcategory: Logon
+        success: enable
+        failure: enable
+
+    - name: Désactiver le partage SMBv1 (CIS recommande de le désactiver)
+      win_feature:
+        name: FS-SMB1
+        state: absent
+        restart: no
+
+    - name: Configurer le délai d’expiration du verrouillage de session à 15 minutes
+      win_regedit:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+        name: InactivityTimeoutSecs
+        datatype: dword
+        data: 900  # 15 minutes en secondes
+
+    - name: Assurer que le pare-feu Windows est activé (profil Domaine)
+      win_firewall_profile:
+        name: Domain
+        enabled: yes
+
+    - name: Assurer que le pare-feu Windows est activé (profil Privé)
+      win_firewall_profile:
+        name: Private
+        enabled: yes
+
+    - name: Assurer que le pare-feu Windows est activé (profil Public)
+      win_firewall_profile:
+        name: Public
+        enabled: yes
