@@ -1,39 +1,10 @@
 ---
-- name: Appliquer règles CIS Windows basiques sans bloquer
+- name: Test connexion Windows simple
   hosts: windows
   gather_facts: no
   collections:
     - ansible.windows
 
   tasks:
-
-    - name: Activer la journalisation des événements de connexion (Logon)
-      win_audit_policy:
-        category: Logon/Logoff
-        subcategory: Logon
-        success: enable
-        failure: enable
-
-    - name: Configurer la durée max du mot de passe à 60 jours
-      win_password_policy:
-        max_password_age: 60
-
-    - name: Désactiver le compte invité (Guest)
-      win_user:
-        name: Guest
-        state: disabled
-
-    - name: Activer la protection en temps réel Windows Defender
-      win_defender:
-        real_time_protection_enabled: yes
-
-    - name: Configurer verrouillage du compte à 5 tentatives échouées
-      win_account_lockout_policy:
-        lockout_threshold: 5
-        lockout_duration: 15
-        lockout_window: 15
-
-    - name: Désinstaller la fonctionnalité SMBv1 (insecure)
-      win_feature:
-        name: FS-SMB1
-        state: absent
+    - name: Ping Windows via win_ping
+      win_ping:
