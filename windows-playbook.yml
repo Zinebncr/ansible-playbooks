@@ -23,5 +23,13 @@
         name: InactivityTimeoutSecs
         datatype: dword
         data: 900
+
+    - name: Installer les mises à jour Windows critiques et de sécurité
+      ansible.windows.win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+        reboot: yes
+
     
 
