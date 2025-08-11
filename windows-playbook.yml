@@ -7,11 +7,10 @@
 
   tasks:
     - name: Activer la journalisation des événements de sécurité (audit des connexions réussies)
-     win_audit_policy_system:
-  category: Logon/Logoff
-  subcategory: Logon
-  audit_type: Success,Failure
-
+      win_audit_policy_system:
+        category: Logon/Logoff
+        subcategory: Logon
+        audit_type: Success,Failure
 
     - name: Désactiver le partage SMBv1 (CIS recommande de le désactiver)
       win_feature:
